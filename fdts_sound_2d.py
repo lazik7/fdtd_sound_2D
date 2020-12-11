@@ -29,7 +29,7 @@ fdtd_y = 20
 
 fdtd_material_number = 0
 
-fdtd_materials = {"water": [1000,2.25,2.25,2.25,0],"steel": [7800,268.5,104.4,268.2,82]}
+#fdtd_materials = {"water": [1000,2.25,2.25,2.25,0],"steel": [7800,268.5,104.4,268.2,82]}
 # q, C11, C12, C22, C33
 fdtd_materials = {"powietrze": [0.0012,0.000101,0.000101,0.000101,0], "water": [1000,2.25,2.25,2.25,0], "steel": [7850,268.5,104.4,268.5,82], "tytan_g2": [4501,195.3,114.7,195.3,40.3], "duraluminium_Pa6": [2790,107.4,52.9,107.4,27.3], "PIC181": [7850, 152.3, 89.09, 152.3, 28.3] }
 
@@ -361,7 +361,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_DockWidget(object):
-    def setupUi(self, DockWidget, setRowCount=3, setColumnCount=6):
+    def setupUi(self, DockWidget, setRowCount=len(fdtd_materials.keys()), setColumnCount=6):
         DockWidget.setObjectName(_fromUtf8("DockWidget"))
         DockWidget.resize(267, 136)
         DockWidget.setFloating(True)
