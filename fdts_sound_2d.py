@@ -31,7 +31,7 @@ fdtd_material_number = 0
 
 #fdtd_materials = {"water": [1000,2.25,2.25,2.25,0],"steel": [7800,268.5,104.4,268.2,82]}
 # q, C11, C12, C22, C33
-fdtd_materials = {"powietrze": [0.0012,0.000101,0.000101,0.000101,0], "water": [1000,2.25,2.25,2.25,0], "steel": [7850,268.5,104.4,268.5,82], "tytan_g2": [4501,195.3,114.7,195.3,40.3], "duraluminium_Pa6": [2790,107.4,52.9,107.4,27.3], "PIC181": [7850, 152.3, 89.09, 152.3, 28.3] }
+fdtd_materials = {"powietrze": [0.0012,0.000101,0.000101,0.000101,0], "water": [1000,2.25,2.25,2.25,0], "steel": [7850,268.5,104.4,268.5,82], "tytan_grade2": [4501,195.3,114.7,195.3,40.3], "duraluminium_Pa6": [2790,107.4,52.9,107.4,27.3], "PIC181": [7850, 152.3, 89.09, 152.3, 28.3] }
 
 """
 nr q	c11	c22	c33 c12	c23 c31 c44 c55 c66
@@ -223,13 +223,22 @@ class MakeMesh():
         global Carte
         global fdtd_material_number
 
+        global fdtd_materials
+
+
+        #fdtd_materials.keys()
+
+        #material_name = str(QtGui.QInputDialog.getText(None, "Get text", "material = ")[0])
+        material_name = str(QtGui.QInputDialog.getItem(None, "Get text", "material = ", fdtd_materials.keys())[0])
+        
+
         fdtd_material_number += 1
 
-        TableLegerete[fdtd_material_number] = (1.0/(fdtd_materials["steel"][0]/1000.))
-        TableC11[fdtd_material_number] = fdtd_materials["steel"][1]
-        TableC12[fdtd_material_number] = fdtd_materials["steel"][2]
-        TableC22[fdtd_material_number] = fdtd_materials["steel"][3]
-        TableC33[fdtd_material_number] = fdtd_materials["steel"][4]
+        TableLegerete[fdtd_material_number] = (1.0/(fdtd_materials[material_name][0]/1000.))
+        TableC11[fdtd_material_number] = fdtd_materials[material_name][1]
+        TableC12[fdtd_material_number] = fdtd_materials[material_name][2]
+        TableC22[fdtd_material_number] = fdtd_materials[material_name][3]
+        TableC33[fdtd_material_number] = fdtd_materials[material_name][4]
 
         dxp2 = fdtd_dx/2.
 
