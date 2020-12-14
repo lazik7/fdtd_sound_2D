@@ -253,6 +253,8 @@ class MakeMesh():
         #np.arange(0,fdtd_y,fdtd_dx)
         #np.arange(0,fdtd_x,fdtd_dx)
 
+        pb = Gui.getMainWindow().statusBar().findChild(QtGui.QProgressBar)
+        
         for i in range(nx):
             for j in range(ny):
                 point=FreeCAD.Vector(i*fdtd_dx+dxp2,j*fdtd_dx+dxp2,0)
@@ -263,7 +265,12 @@ class MakeMesh():
                     except:
                         print(i,j, nx*i+j, len(Carte), nx, ny )
 
-            print( "%.1f" % (i/nx*100) )
+            #print( "%.1f" % (i/nx*100) )
+            #pb.setValue(pb.maximum()/2)
+            pb.setValue(pb.maximum()*i/nx)
+            pb.show()
+
+        pb.setValue(pb.maximum())
 
             
 
