@@ -16,6 +16,8 @@ from matplotlib.pyplot import figure, draw, pause
 from matplotlib import pyplot as plt
 import datetime
 
+import materials
+
 __dir__ = os.path.dirname(__file__)
 iconPath = os.path.join( __dir__, 'Icons' )
 
@@ -394,6 +396,9 @@ class Ui_DockWidget(object):
         button_add = QtGui.QPushButton('add')
         button_add.clicked.connect(self.add)
 
+        button_add_material_izotropowy = QtGui.QPushButton('add material izotropowy')
+        button_add_material_izotropowy.clicked.connect(self.add_material_izotropowy)
+
         button_remove = QtGui.QPushButton('remove')
         button_remove.clicked.connect(self.remove)
 
@@ -403,6 +408,7 @@ class Ui_DockWidget(object):
         self.vLayout = QtGui.QVBoxLayout()
         self.vLayout.addWidget(self.table)
         self.vLayout.addWidget(button_add)
+        self.vLayout.addWidget(button_add_material_izotropowy)
         self.vLayout.addWidget(button_remove)
         self.vLayout.addWidget(button_save)
         
@@ -413,6 +419,42 @@ class Ui_DockWidget(object):
 
         self.retranslateUi(DockWidget)
         QtCore.QMetaObject.connectSlotsByName(DockWidget)
+
+    def add_material_izotropowy(self):
+
+        global fdtd_materials
+
+        material_name = str(QtGui.QInputDialog.getText(None, "Get text", "material = ")[0])
+        material_ρ = float(QtGui.QInputDialog.getText(None, "Get text", "ρ[kg/m3] = ")[0])
+        material_E = float(QtGui.QInputDialog.getText(None, "Get text", "Young E[GPa] = ")[0])
+        material_ν = float(QtGui.QInputDialog.getText(None, "Get text", "Poisson number (ν) = ")[0])
+        
+        new_material = materials.Material(
+                        name = material_name,
+                        E = material_E*1e9,     # GPa, Wiki mean
+                        ν = material_ν,       # Wiki for copper
+                        ρ = material_ρ,      # density, kg/m3
+                )
+
+        c11 = new_material.Obl_isotropowe_C11()/1.e9
+        c22 = new_material.Obl_isotropowe_C22()/1.e9
+        c12 = new_material.Obl_isotropowe_C12()/1.e9
+        c66 = new_material.Obl_isotropowe_C66()/1.e9
+
+        n = self.table.rowCount()
+        self.table.setRowCount(n+1)
+
+        self.table.setItem(n, 0, QtGui.QTableWidgetItem( new_material.name ))
+        self.table.setItem(n, 1, QtGui.QTableWidgetItem( "%.1f" % new_material.ρ ))
+        self.table.setItem(n, 2, QtGui.QTableWidgetItem( "%.1f" % c11 ))
+        self.table.setItem(n, 3, QtGui.QTableWidgetItem( "%.1f" % c12 ))
+        self.table.setItem(n, 4, QtGui.QTableWidgetItem( "%.1f" % c22 ))
+        self.table.setItem(n, 5, QtGui.QTableWidgetItem( "%.1f" % c66 ))
+
+        fdtd_materials[new_material.name] = [new_material.ρ, c11, c12, c22, c66]
+
+
+        
 
     def retranslateUi(self, DockWidget):
         DockWidget.setWindowTitle(_translate("DockWidget", "Mass calculator", None))
