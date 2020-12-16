@@ -16,6 +16,8 @@ from matplotlib.pyplot import figure, draw, pause
 from matplotlib import pyplot as plt
 import datetime
 
+import csv
+
 import materials
 
 __dir__ = os.path.dirname(__file__)
@@ -488,6 +490,18 @@ class Ui_DockWidget(object):
                 fdtd_materials[material][j-1] = float(self.table.item(i, j).text())
 
 
+        # save to file
+        from os.path import join, dirname
+        __dir__ = dirname(__file__)
+
+        with open( join( __dir__, "materials_save.csv") , "w", newline='') as filecsv:
+            saver = csv.writer(filecsv)
+            for mat in fdtd_materials.keys():
+                l = fdtd_materials[mat]
+                l.insert(0, mat)
+                saver.writerow(l)
+
+
     def add(self):
         self.table.setRowCount(self.table.rowCount()+1)
 
@@ -542,7 +556,7 @@ class Materials():
 class Cmax():
     """My new command"""
 
-    from os.path import join, dirname    
+    from os.path import join, dirname
     __dir__ = dirname(__file__)
     mojmod_icons_path =  join( __dir__, 'Icons')
     Icon = join( mojmod_icons_path , 'cmax.png')
