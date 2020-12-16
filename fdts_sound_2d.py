@@ -35,7 +35,15 @@ fdtd_material_number = 0
 
 #fdtd_materials = {"water": [1000,2.25,2.25,2.25,0],"steel": [7800,268.5,104.4,268.2,82]}
 # q, C11, C12, C22, C33
-fdtd_materials = {"powietrze": [0.0012,0.000101,0.000101,0.000101,0], "water": [1000,2.25,2.25,2.25,0], "steel": [7850,268.5,104.4,268.5,82], "tytan_grade2": [4501,195.3,114.7,195.3,40.3], "duraluminium_Pa6": [2790,107.4,52.9,107.4,27.3], "PIC181": [7850, 152.3, 89.09, 152.3, 28.3] }
+#fdtd_materials = {"powietrze": [0.0012,0.000101,0.000101,0.000101,0], "water": [1000,2.25,2.25,2.25,0], "steel": [7850,268.5,104.4,268.5,82], "tytan_grade2": [4501,195.3,114.7,195.3,40.3], "duraluminium_Pa6": [2790,107.4,52.9,107.4,27.3], "PIC181": [7850, 152.3, 89.09, 152.3, 28.3] }
+fdtd_materials = {}
+
+with open( os.path.join(__dir__, 'materials_save.csv'), newline='') as csvfile:
+	spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+	for row in spamreader:
+		a = row[0].split(",")
+		fdtd_materials[a[0]] = [float(i) for i in a[1:]]
+
 
 """
 nr q	c11	c22	c33 c12	c23 c31 c44 c55 c66
@@ -382,6 +390,7 @@ except AttributeError:
 
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget, setRowCount=len(fdtd_materials.keys()), setColumnCount=6):
+        
         DockWidget.setObjectName(_fromUtf8("DockWidget"))
         DockWidget.resize(267, 136)
         DockWidget.setFloating(True)
@@ -390,11 +399,10 @@ class Ui_DockWidget(object):
         self.gridLayout = QtGui.QGridLayout(self.dockWidgetContents)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
 
-
         self.table = QtGui.QTableWidget()
         self.table.setRowCount(setRowCount)
         self.table.setColumnCount(setColumnCount)
-
+        
         button_add = QtGui.QPushButton('add')
         button_add.clicked.connect(self.add)
 
